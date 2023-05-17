@@ -1,0 +1,9 @@
+[virtualenvs]
+create = true
+in-project = false
+modern-installation = true
+path = ".local"
+prefer-active-python = true
+
+[installer]
+no-binary = ["pyodbc", "psycopg2"]

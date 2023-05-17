@@ -1,0 +1,28 @@
+version: '3.9'
+
+services:
+
+  webapp:
+    build:
+      args:
+        - PIP_VERSION=${BUILD_PIP_VERSION}
+        - POETRY_VERSION=${BUILD_POETRY_VERSION}
+        - PYTHON_VERSION=${BUILD_PYTHON_VERSION}
+      context: .
+    container_name: example-django-mssql-docker
+    entrypoint: [ task, run-server-prod ]
+    env_file:
+      - .env
+    image: example-django-mssql-docker:latest
+    init: true
+    networks:
+      - example-network
+    ports:
+      - "8000:80"
+    volumes:
+      - ./.local/docker/.local:/app/.local/:rw
+
+networks:
+  example-network:
+    name: example-django-mssql-docker.local
+    driver: bridge

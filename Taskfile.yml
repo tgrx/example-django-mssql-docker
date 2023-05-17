@@ -1,0 +1,178 @@
+version: '3'
+
+output: 'prefixed'
+
+tasks:
+
+  code-format:
+    cmds:
+      - >
+        poetry run autoflake
+        --exclude '*.local*'
+        --expand-star-imports
+        --in-place
+        --recursive
+        --remove-all-unused-imports
+        --remove-duplicate-keys
+        --remove-unused-variables
+        --verbose
+        .
+      - poetry run black .
+      - poetry run isort --virtual-env="{{.DIR_VENV}}" .
+    desc: format code with autoflake, black, isort
+    dir: "{{.ROOT_DIR}}"
+
+  code-lint:
+    cmds:
+      - poetry run black --check .
+      - poetry run isort --check-only --virtual-env="{{.DIR_VENV}}" .
+      - poetry run mypy --config-file="{{.ROOT_DIR}}/pyproject.toml"
+      - poetry run flake8 --config="{{.ROOT_DIR}}/.flake8" .
+      - echo 'all linters passed'
+    desc: validate code using linters
+    dir: "{{.ROOT_DIR}}"
+
+  collect-static:
+    cmds:
+      - poetry run python manage.py collectstatic --noinput
+    desc: collect static
+    dir: "{{.ROOT_DIR}}"
+    env:
+      XXX_DATABASE_HOST: xxx
+      XXX_DATABASE_NAME: xxx
+      XXX_DATABASE_PASSWORD: xxx
+      XXX_DATABASE_PORT: 1433
+      XXX_DATABASE_USERNAME: xxx
+      XXX_SECRET_KEY: xxx
+    run: once
+
+  db-migrate:
+    cmds:
+      - poetry run python manage.py migrate
+    desc: migrate db
+    dir: "{{.ROOT_DIR}}"
+    run: once
+
+  db-migrate-dev:
+    cmds:
+      - poetry run python manage.py makemigrations
+      - task: code-format
+      - task: db-migrate
+    desc: create migrations and migrate
+    dir: "{{.ROOT_DIR}}"
+    run: once
+
+  docker-down:
+    cmds:
+      - docker compose down --remove-orphans
+    desc: stop all services
+    dir: "{{.ROOT_DIR}}"
+    preconditions:
+      - docker info
+    run: once
+
+  docker-up:
+    cmds:
+      - docker compose up --detach --remove-orphans --wait {{.CLI_ARGS}}
+    desc: start all ( `-- [<service> ...]`) services
+    dir: "{{.ROOT_DIR}}"
+    preconditions:
+      - docker info
+    run: once
+
+  run-server-dev:
+    cmds:
+      - >
+        poetry run
+        python manage.py
+        runserver
+        0.0.0.0:8000
+    desc: run Django dev server
+    dir: "{{.ROOT_DIR}}"
+    dotenv:
+      - .env
+      - .env.sample
+    run: once
+
+  run-server-prod:
+    cmds:
+      - >
+        poetry run
+        gunicorn
+        --config="{{.ROOT_DIR}}/domains/config/gunicorn.conf.py"
+        project.wsgi:application
+    desc: run Gunicorn on 0.0.0.0:80
+    dir: "{{.ROOT_DIR}}"
+    dotenv:
+      - .env
+      - .env.sample
+    platforms:
+      - darwin
+      - linux
+    run: once
+
+  run-tests:
+    cmds:
+      - poetry run pytest
+    desc: run tests
+    dir: "{{.ROOT_DIR}}"
+    run: once
+
+  setup-toolchain:
+    cmds:
+      - task: setup-toolchain-macos
+      - pyenv install --skip-existing "{{.PYTHON_VERSION}}"
+      - pip install --upgrade "pip=={{.PIP_VERSION}}"
+      - pip install --upgrade "poetry=={{.POETRY_VERSION}}"
+      - poetry env use "{{.PYTHON_VERSION}}"
+      - poetry install --with dev
+    desc: "setup developer's toolchain: Pyenv, Python, Poetry, venv"
+    dir: "{{.ROOT_DIR}}"
+    platforms:
+      - darwin
+      - linux
+    preconditions:
+      - pyenv --version
+
+  setup-toolchain-macos:
+    cmds:
+      - brew tap microsoft/mssql-release https://github.com/Microsoft/homebrew-mssql-release
+      - brew update
+      - >
+        brew install
+        msodbcsql18
+        mssql-tools18
+        pyenv
+        unixodbc
+      - odbcinst -j
+    desc: "setup MacOS"
+    dir: "{{.ROOT_DIR}}"
+    env:
+      HOMEBREW_ACCEPT_EULA: Y
+    internal: true
+    platforms:
+      - darwin
+    preconditions:
+      - brew --version
+
+  # setup-db:
+  #   cmds:
+  #     - poetry run python -m periodic.db.setup_db
+  #   desc: "setup DB"
+  #   dir: "{{.ROOT_DIR}}"
+
+vars:
+  DIR_LOCAL:
+    sh: (cd "{{.ROOT_DIR}}"/.local && pwd) || echo '.local'
+  DIR_VENV:
+    sh: (cd "$(poetry env info --path)" && pwd) || echo '.venv'
+  PIP_VERSION:
+    sh: (cat "{{.ROOT_DIR}}/.pip-version") || echo '23.1.2'
+  POETRY_VERSION:
+    sh: (cat "{{.ROOT_DIR}}/.poetry-version") || echo '1.4.2'
+  PYTHON_VERSION:
+    sh: (cat "{{.ROOT_DIR}}/.python-version") || echo '3.11.3'
+
+
+env:
+  PYTHONPATH: "{{.ROOT_DIR}}"
