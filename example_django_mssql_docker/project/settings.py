@@ -1,3 +1,5 @@
+import dj_database_url
+
 from domains.config import Config
 from domains.fs import dirs
 
@@ -55,16 +57,13 @@ TEMPLATES = [
 WSGI_APPLICATION = "project.wsgi.application"
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": dirs.DIR_LOCAL / "db.sqlite3",
-    },
+    "default": dj_database_url.parse(conf.PRIMARY_DATABASE_URL),
     "mssql": {
-        "HOST": conf.DATABASE_HOST,
-        "NAME": conf.DATABASE_NAME,
-        "PASSWORD": conf.DATABASE_PASSWORD,
-        "PORT": conf.DATABASE_PORT,
-        "USER": conf.DATABASE_USERNAME,
+        "HOST": conf.MSSQL_DATABASE_HOST,
+        "NAME": conf.MSSQL_DATABASE_NAME,
+        "PASSWORD": conf.MSSQL_DATABASE_PASSWORD,
+        "PORT": conf.MSSQL_DATABASE_PORT,
+        "USER": conf.MSSQL_DATABASE_USERNAME,
         "ENGINE": "sql_server.pyodbc",
         "OPTIONS": {
             "driver": "ODBC Driver 18 for SQL Server",

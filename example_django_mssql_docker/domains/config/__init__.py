@@ -8,13 +8,14 @@ class Config(BaseSettings):
         case_sensitive = True
         env_file = dirs.DIR_REPO / ".env"
         env_file_encoding = "utf-8"
-        env_prefix = "XXX_"
+        env_prefix = "WEBAPP_"
         frozen = True
 
-    DATABASE_HOST: str
-    DATABASE_NAME: str
-    DATABASE_PASSWORD: str
-    DATABASE_PORT: int
-    DATABASE_USERNAME: str
     MODE_DEBUG: bool = False
+    MSSQL_DATABASE_HOST: str
+    MSSQL_DATABASE_NAME: str
+    MSSQL_DATABASE_PASSWORD: str
+    MSSQL_DATABASE_PORT: int
+    MSSQL_DATABASE_USERNAME: str
+    PRIMARY_DATABASE_URL: str
     SECRET_KEY: str

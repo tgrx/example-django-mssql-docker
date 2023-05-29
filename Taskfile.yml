@@ -31,6 +31,14 @@ tasks:
       - echo 'all linters passed'
     desc: validate code using linters
     dir: "{{.ROOT_DIR}}"
+    env:
+      WEBAPP_MSSQL_DATABASE_HOST: fake
+      WEBAPP_MSSQL_DATABASE_NAME: fake
+      WEBAPP_MSSQL_DATABASE_PASSWORD: fake
+      WEBAPP_MSSQL_DATABASE_PORT: 1433
+      WEBAPP_MSSQL_DATABASE_USERNAME: fake
+      WEBAPP_PRIMARY_DATABASE_URL: 'postgresql://fake:fake@fake:5432/fake'
+      WEBAPP_SECRET_KEY: fake
 
   collect-static:
     cmds:
@@ -38,12 +46,13 @@ tasks:
     desc: collect static
     dir: "{{.ROOT_DIR}}"
     env:
-      XXX_DATABASE_HOST: xxx
-      XXX_DATABASE_NAME: xxx
-      XXX_DATABASE_PASSWORD: xxx
-      XXX_DATABASE_PORT: 1433
-      XXX_DATABASE_USERNAME: xxx
-      XXX_SECRET_KEY: xxx
+      WEBAPP_MSSQL_DATABASE_HOST: fake
+      WEBAPP_MSSQL_DATABASE_NAME: fake
+      WEBAPP_MSSQL_DATABASE_PASSWORD: fake
+      WEBAPP_MSSQL_DATABASE_PORT: 1433
+      WEBAPP_MSSQL_DATABASE_USERNAME: fake
+      WEBAPP_PRIMARY_DATABASE_URL: 'postgresql://fake:fake@fake:5432/fake'
+      WEBAPP_SECRET_KEY: fake
     run: once
 
   db-migrate:
@@ -155,23 +164,17 @@ tasks:
     preconditions:
       - brew --version
 
-  # setup-db:
-  #   cmds:
-  #     - poetry run python -m periodic.db.setup_db
-  #   desc: "setup DB"
-  #   dir: "{{.ROOT_DIR}}"
-
 vars:
   DIR_LOCAL:
     sh: (cd "{{.ROOT_DIR}}"/.local && pwd) || echo '.local'
   DIR_VENV:
     sh: (cd "$(poetry env info --path)" && pwd) || echo '.venv'
   PIP_VERSION:
-    sh: (cat "{{.ROOT_DIR}}/.pip-version") || echo '23.1.2'
+    sh: (cat "{{.ROOT_DIR}}/.env" | grep 'WEBAPP_BUILD_PIP_VERSION' | sed -e 's/^.*=//g' ) || echo '23.1.2'
   POETRY_VERSION:
-    sh: (cat "{{.ROOT_DIR}}/.poetry-version") || echo '1.4.2'
+    sh: (cat "{{.ROOT_DIR}}/.env" | grep 'WEBAPP_BUILD_POETRY_VERSION' | sed -e 's/^.*=//g' ) || echo '1.5.0'
   PYTHON_VERSION:
-    sh: (cat "{{.ROOT_DIR}}/.python-version") || echo '3.11.3'
+    sh: (cat "{{.ROOT_DIR}}/.env" | grep 'WEBAPP_BUILD_PYTHON_VERSION' | sed -e 's/^.*=//g' ) || echo '3.11.3'
 
 
 env:

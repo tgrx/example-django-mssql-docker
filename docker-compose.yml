@@ -5,22 +5,47 @@ services:
   webapp:
     build:
       args:
-        - PIP_VERSION=${BUILD_PIP_VERSION}
-        - POETRY_VERSION=${BUILD_POETRY_VERSION}
-        - PYTHON_VERSION=${BUILD_PYTHON_VERSION}
+        - PIP_VERSION=${WEBAPP_BUILD_PIP_VERSION}
+        - POETRY_VERSION=${WEBAPP_BUILD_POETRY_VERSION}
+        - PYTHON_VERSION=${WEBAPP_BUILD_PYTHON_VERSION}
       context: .
-    container_name: example-django-mssql-docker
+      target: production
+    container_name: example-django-mssql-docker-webapp
+    depends_on:
+      db:
+        condition: service_healthy
     entrypoint: [ task, run-server-prod ]
     env_file:
       - .env
-    image: example-django-mssql-docker:latest
+    image: example-django-mssql-docker-webapp:latest
     init: true
     networks:
       - example-network
     ports:
       - "8000:80"
     volumes:
-      - ./.local/docker/.local:/app/.local/:rw
+      - ./.local/docker/webapp/.local/:/app/.local/:rw
+
+  db:
+    container_name: example-django-mssql-docker-db
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USERNAME}
+    healthcheck:
+      interval: 30s
+      retries: 4
+      start_period: 12s
+      test: psql -U ${DB_USERNAME} -d ${DB_DATABASE} -h localhost -c 'select 1;'
+      timeout: 4s
+    image: postgres:15.3
+    init: true
+    networks:
+      - example-network
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./.local/docker/db/data/:/var/lib/postgresql/data/:rw
 
 networks:
   example-network:
