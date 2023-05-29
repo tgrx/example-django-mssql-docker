@@ -9,7 +9,8 @@ services:
         - POETRY_VERSION=${WEBAPP_BUILD_POETRY_VERSION}
         - PYTHON_VERSION=${WEBAPP_BUILD_PYTHON_VERSION}
       context: .
-      target: production
+      # target: base
+      # target: production
     container_name: example-django-mssql-docker-webapp
     depends_on:
       db:

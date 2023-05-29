@@ -3,7 +3,6 @@ authors = ["Alexander Sidorov <alexander@sidorov.dev>"]
 description = "Example: Django + MSSQL + Docker"
 license = "MIT"
 name = "example_django_mssql_docker"
-packages = [{include = "example_django_mssql_docker"}]
 version = "2023.06.01"
 
 

@@ -89,6 +89,28 @@ tasks:
       - docker info
     run: once
 
+  run-docker-standalone:
+    cmds:
+      - >
+        docker run
+        --entrypoint=/bin/bash
+        --env-file=.env
+        --init
+        --interactive
+        --name=example-django-mssql-docker-webapp-standalone
+        --no-healthcheck
+        --read-only
+        --rm
+        --tty
+        example-django-mssql-docker-webapp
+    desc: run standalone container
+    dir: "{{.ROOT_DIR}}"
+    interactive: yes
+    preconditions:
+      - docker info
+      - docker images | grep example-django-mssql-docker-webapp
+    run: once
+
   run-server-dev:
     cmds:
       - >
