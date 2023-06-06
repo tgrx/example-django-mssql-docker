@@ -8,8 +8,8 @@ Includes:
 1. [Task](https://taskfile.dev).
 2. [Poetry](https://python-poetry.org/).
 3. DB drivers: [ODBC](https://learn.microsoft.com/en-us/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server) and [PostgreSQL](https://www.psycopg.org/docs/).
-4. [Non-root user](https://betterprogramming.pub/running-a-container-with-a-non-root-user-e35830d1f42a)
-5. [Caches](https://docs.docker.com/build/cache/)
+4. [Non-root user](https://betterprogramming.pub/running-a-container-with-a-non-root-user-e35830d1f42a).
+5. [Caches](https://docs.docker.com/build/cache/).
 
 Current size: ~230 MB
 
