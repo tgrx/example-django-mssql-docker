@@ -2,15 +2,22 @@
 
 ## Description
 
-This is a bootstrap setup for a single service (webapp).
+This is a bootstrap setup for a single service (webapp). The service is shipped as Docker image. The service will provide a Django/DRF webapp, which displays the tables within the given DB.
 
-The service will provide a Django/DRF webapp, which displays the tables within the given DB.
+Includes:
+1. [Task](https://taskfile.dev).
+2. [Poetry](https://python-poetry.org/).
+3. DB drivers: [ODBC](https://learn.microsoft.com/en-us/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server) and [PostgreSQL](https://www.psycopg.org/docs/).
+4. [Non-root user](https://betterprogramming.pub/running-a-container-with-a-non-root-user-e35830d1f42a)
+5. [Caches](https://docs.docker.com/build/cache/)
+
+Current size: ~230 MB
+
+## Usage
 
 The service utilizes a given MS SQL.
 Unfortunately MS SQL does not respect URLs, so you have to configure each aspect
-of credentials explicitly. See `.env.sample` for examples. `XXX_` is a prefix for env vars.
-
-## Usage
+of credentials explicitly. See `.env.sample` for examples. `WEBAPP_` is a prefix for env vars.
 
 After successful build & run,
 you can open [http://localhost:8000/](http://localhost:8000/)
