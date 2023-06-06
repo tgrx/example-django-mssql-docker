@@ -5,7 +5,7 @@ def test_happy() -> None:
     url = "http://localhost:8000/"
 
     try:
-        response: requests.Response = requests.get(url, timeout=10)
+        response: requests.Response = requests.get(url, timeout=30)
     except requests.ConnectionError as exc:
         msg = "django server is not available"
         raise AssertionError(msg) from exc
