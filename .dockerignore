@@ -1,10 +1,11 @@
 **/*.py[cod]
+**/__pycache__
 .env
 .env.sample
 .flake8
 .gitignore
 .local/
-__pycache__
+.python-version
 dist/
 Dockerfile
 poetry.toml
