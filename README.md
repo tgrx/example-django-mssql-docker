@@ -11,7 +11,12 @@ Includes:
 4. [Non-root user](https://betterprogramming.pub/running-a-container-with-a-non-root-user-e35830d1f42a).
 5. [Caches](https://docs.docker.com/build/cache/).
 
-Current size: ~230 MB
+Current image size: ~230 MB
+
+```console
+❯ docker images | grep example-django-mssql-docker-webapp
+example-django-mssql-docker-webapp                 latest          a071208f4698   31 seconds ago      229MB
+```
 
 ## Usage
 
@@ -58,7 +63,7 @@ I haven't checked yet this way, please send me a feedback in case of any bug.
 
 1. be sure you have Microsoft ODBC drivers installed. [Here are](https://github.com/mkleehammer/pyodbc/wiki/Install) some key points.
 2. install [Python 3.11.3](https://www.python.org/downloads/release/python-3113/)
-3. install [Poetry 1.4.2](https://python-poetry.org/docs/#installation)
+3. install [Poetry 1.5.1](https://python-poetry.org/docs/#installation)
 4. bind Python 3.11.3 to the cloned directory (this project)
 5. create venv and install dependencies: `poetry install --with dev --sync`
 6. double-check your `.env`
