@@ -64,7 +64,7 @@ DATABASES = {
         "PASSWORD": conf.MSSQL_DATABASE_PASSWORD,
         "PORT": conf.MSSQL_DATABASE_PORT,
         "USER": conf.MSSQL_DATABASE_USERNAME,
-        "ENGINE": "sql_server.pyodbc",
+        "ENGINE": "mssql",
         "OPTIONS": {
             "driver": "ODBC Driver 18 for SQL Server",
             "extra_params": "Encrypt=no",
