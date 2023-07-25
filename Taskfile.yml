@@ -192,9 +192,9 @@ vars:
   DIR_VENV:
     sh: (cd "$(poetry env info --path)" && pwd) || echo '.venv'
   PIP_VERSION:
-    sh: (cat "{{.ROOT_DIR}}/.env" | grep 'WEBAPP_BUILD_PIP_VERSION' | sed -e 's/^.*=//g' ) || echo '23.1.2'
+    sh: (cat "{{.ROOT_DIR}}/.env" | grep 'WEBAPP_BUILD_PIP_VERSION' | sed -e 's/^.*=//g' ) || echo '23.2.1'
   POETRY_VERSION:
-    sh: (cat "{{.ROOT_DIR}}/.env" | grep 'WEBAPP_BUILD_POETRY_VERSION' | sed -e 's/^.*=//g' ) || echo '1.5.0'
+    sh: (cat "{{.ROOT_DIR}}/.env" | grep 'WEBAPP_BUILD_POETRY_VERSION' | sed -e 's/^.*=//g' ) || echo '1.5.1'
   PYTHON_VERSION:
     sh: (cat "{{.ROOT_DIR}}/.env" | grep 'WEBAPP_BUILD_PYTHON_VERSION' | sed -e 's/^.*=//g' ) || echo '3.11.3'
 

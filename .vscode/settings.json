@@ -1,0 +1,8 @@
+{
+    "json.schemaDownload.enable": true,
+    "python.analysis.autoSearchPaths": false,
+    "python.analysis.extraPaths": [],
+    "python.autoComplete.extraPaths": [],
+    "python.defaultInterpreterPath": ".local/example-django-mssql-docker-ZJtb75Eu-py3.11/bin/python",
+    "python.terminal.activateEnvironment": false
+}
